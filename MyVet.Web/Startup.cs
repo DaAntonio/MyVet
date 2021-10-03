@@ -2,9 +2,14 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MyVet.Web.Data;
+using MyVet.Web.Data.Entidades;
+using MyVet.Web.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +36,29 @@ namespace MyVet.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddIdentity<Usuario, IdentityRole>(cfg =>
+             {
+                 cfg.User.RequireUniqueEmail = true;
+                 cfg.Password.RequireDigit = false;
+                 cfg.Password.RequiredUniqueChars = 0;
+                 cfg.Password.RequireLowercase = false;
+                 cfg.Password.RequireNonAlphanumeric = false;
+                 cfg.Password.RequireUppercase = false;
+             }).AddEntityFrameworkStores<DataContext>();
 
+            //Inyectamos la conexion a base de datos
+            services.AddDbContext<DataContext>(cfg =>
+            {
+                cfg.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+
+            });
+
+            //Inyeccion de alimentaros db
+            //AddTransient Una sola Inyeccion
+            //AddScoped  inyeccion las n veses que se llame
+            //AddScoped inyeccion en memoria 
+            services.AddTransient<AlimentadorDB>();
+            services.AddScoped<IUsuarioHelper, UserHelper>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -51,6 +78,7 @@ namespace MyVet.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
