@@ -4,8 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyVet.Web.Data;
 using MyVet.Web.Data.Entidades;
+using MyVet.Web.Models;
 using System.Linq;
 using System.Threading.Tasks;
+using MyVet.Web.Helpers;
+using System.Collections.Generic;
+using System;
 #endregion
 
 namespace MyVet.Web.Controllers
@@ -17,24 +21,25 @@ namespace MyVet.Web.Controllers
     {
         #region Variables
         private readonly DataContext _context;
+        private readonly IUsuarioHelper _usuarioHelper;
         #endregion
 
         #region Constructor
-        public ClientesController(DataContext context)
+        public ClientesController(DataContext context,IUsuarioHelper usuarioHelper)
         {
             _context = context;
+            _usuarioHelper = usuarioHelper;
         }
-
         #endregion
 
         #region Metodos
-        // GET: Clientes
-        public async Task<IActionResult> Index()
+        public  IActionResult Index()
         {
-            return View(await _context.Clientes.ToListAsync());
+            return View(_context.Clientes
+                .Include(c=>c.Usuario)
+                .Include(c => c.Mascotas));
         }
 
-        // GET: Clientes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -42,6 +47,11 @@ namespace MyVet.Web.Controllers
                 return NotFound();
             }
             var cliente = await _context.Clientes
+                .Include(c => c.Usuario)
+                .Include(c => c.Mascotas)
+                .ThenInclude(m=>m.TipoMascota)
+                .Include(c => c.Mascotas)
+                .ThenInclude(m => m.HistorialMedicos)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (cliente == null)
             {
@@ -50,26 +60,57 @@ namespace MyVet.Web.Controllers
             return View(cliente);
         }
 
-        // GET: Clientes/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Clientes/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id")] Cliente cliente)
+        public async Task<IActionResult> Create(AddUsuarioViewModel modelo)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(cliente);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var usuario = new Usuario
+                {
+                    Direccion = modelo.Direccion,
+                    Documento = modelo.Documento,
+                    Email = modelo.Correo,
+                    Nombre = modelo.Nombre,
+                    Apellidos = modelo.Apellido,
+                    PhoneNumber = modelo.NTelefono,
+                    UserName = modelo.Correo
+
+                };
+                var respuesta = await _usuarioHelper.AddUsuarioAsync(usuario, modelo.Password);
+                if (respuesta.Succeeded)
+                {
+                    var usuariobd = await _usuarioHelper.GetUsuarioByEmailAsync(modelo.Correo);
+                    await _usuarioHelper.AddUsuarioToRolAsync(usuariobd, "Customer");
+
+                    var cliente = new Cliente
+                    {
+                        Agendas = new List<Agenda>(),
+                        Mascotas = new List<Mascota>(),
+                        Usuario = usuariobd
+
+                    };
+                    _context.Clientes.Add(cliente);
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError(string.Empty, ex.ToString());
+                        return View(modelo);
+                    }  
+                }
+                ModelState.AddModelError(string.Empty, respuesta.Errors.FirstOrDefault().Description);
+                
             }
-            return View(cliente);
+            return View(modelo);
         }
 
         // GET: Clientes/Edit/5

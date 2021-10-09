@@ -1,10 +1,10 @@
-﻿@model MyVet.Web.Data.Entidades.Cliente
+﻿@model MyVet.Web.Models.AddUsuarioViewModel
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h2>Create</h2>
+<h2>Agregar</h2>
 
 <h4>Cliente</h4>
 <hr />
@@ -12,14 +12,66 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <label asp-for="Correo" class="control-label"></label>
+                <input asp-for="Correo" class="form-control" />
+                <span asp-validation-for="Correo" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Documento" class="control-label"></label>
+                <input asp-for="Documento" class="form-control" />
+                <span asp-validation-for="Documento" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Apellido" class="control-label"></label>
+                <input asp-for="Apellido" class="form-control" />
+                <span asp-validation-for="Apellido" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Direccion" class="control-label"></label>
+                <input asp-for="Direccion" class="form-control" />
+                <span asp-validation-for="Direccion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NTelefono" class="control-label"></label>
+                <input asp-for="NTelefono" class="form-control" />
+                <span asp-validation-for="NTelefono" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PasswordConfirm" class="control-label"></label>
+                <input asp-for="PasswordConfirm" class="form-control" />
+                <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Agregar" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-success">Regresar</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
 
