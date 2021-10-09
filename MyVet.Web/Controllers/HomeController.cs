@@ -1,15 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿#region Using
+using Microsoft.AspNetCore.Mvc;
 using MyVet.Web.Models;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+#endregion
+
 
 namespace MyVet.Web.Controllers
 {
+    #region Permisos
+    #endregion
     public class HomeController : Controller
     {
+        #region Variables
+        #endregion
+
+        #region Constructor	
+        #endregion
+
+        #region Metodos	
+       
         public IActionResult Index()
         {
             return View();
@@ -39,5 +48,7 @@ namespace MyVet.Web.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        #endregion
+
     }
 }

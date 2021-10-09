@@ -1,23 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿#region  Using
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyVet.Web.Data;
 using MyVet.Web.Data.Entidades;
-
+using System.Linq;
+using System.Threading.Tasks;
+#endregion
 namespace MyVet.Web.Controllers
+
 {
+    #region Permisos
+    [Authorize(Roles = "Admin")]
+    #endregion
     public class ManagersController : Controller
     {
+        #region Variables
         private readonly DataContext _context;
+        #endregion
 
+
+        #region Constructor
         public ManagersController(DataContext context)
         {
             _context = context;
         }
+        #endregion
+
+        #region Metodos	
 
         // GET: Managers
         public async Task<IActionResult> Index()
@@ -32,14 +42,12 @@ namespace MyVet.Web.Controllers
             {
                 return NotFound();
             }
-
             var manager = await _context.Managers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (manager == null)
             {
                 return NotFound();
             }
-
             return View(manager);
         }
 
@@ -72,7 +80,6 @@ namespace MyVet.Web.Controllers
             {
                 return NotFound();
             }
-
             var manager = await _context.Managers.FindAsync(id);
             if (manager == null)
             {
@@ -123,14 +130,12 @@ namespace MyVet.Web.Controllers
             {
                 return NotFound();
             }
-
             var manager = await _context.Managers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (manager == null)
             {
                 return NotFound();
             }
-
             return View(manager);
         }
 
@@ -149,5 +154,6 @@ namespace MyVet.Web.Controllers
         {
             return _context.Managers.Any(e => e.Id == id);
         }
+        #endregion
     }
 }

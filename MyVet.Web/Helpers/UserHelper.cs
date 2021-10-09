@@ -1,6 +1,7 @@
 ﻿#region Using
 using Microsoft.AspNetCore.Identity;
 using MyVet.Web.Data.Entidades;
+using MyVet.Web.Models;
 using System.Threading.Tasks;
 #endregion
 
@@ -11,13 +12,17 @@ namespace MyVet.Web.Helpers
         #region Variables 
         private readonly UserManager<Usuario> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<Usuario> _signInManager;
         #endregion
 
         #region Contructor
-        public UserHelper(UserManager<Usuario> userManager,RoleManager<IdentityRole> roleManager)
+        public UserHelper(UserManager<Usuario> userManager,RoleManager<IdentityRole> roleManager,
+            SignInManager<Usuario> signInManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _signInManager = signInManager;
+            
         }
         #endregion
 
@@ -54,6 +59,21 @@ namespace MyVet.Web.Helpers
         public async Task<bool> IsUsuarioInRolAsync(Usuario usuario,string rolNombre)
         {
             return await _userManager.IsInRoleAsync(usuario, rolNombre);
+        }
+
+        public async Task<SignInResult> LoginAsync(LoginViewModel loginViewModel)
+        {
+            return await _signInManager.PasswordSignInAsync(
+                loginViewModel.NobreUsuario,
+                loginViewModel.Contracena,
+                loginViewModel.Recordar,
+                false
+                );
+        }
+
+        public  async Task LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
         }
 
         #endregion

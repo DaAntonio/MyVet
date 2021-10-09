@@ -1,24 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿#region Using
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyVet.Web.Data;
 using MyVet.Web.Data.Entidades;
+using System.Linq;
+using System.Threading.Tasks;
+#endregion
 
 namespace MyVet.Web.Controllers
 {
+    #region Permisos
+    [Authorize (Roles ="Admin")]
+    #endregion
     public class ClientesController : Controller
     {
+        #region Variables
         private readonly DataContext _context;
+        #endregion
 
+        #region Constructor
         public ClientesController(DataContext context)
         {
             _context = context;
         }
 
+        #endregion
+
+        #region Metodos
         // GET: Clientes
         public async Task<IActionResult> Index()
         {
@@ -32,14 +41,12 @@ namespace MyVet.Web.Controllers
             {
                 return NotFound();
             }
-
             var cliente = await _context.Clientes
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (cliente == null)
             {
                 return NotFound();
             }
-
             return View(cliente);
         }
 
@@ -72,7 +79,6 @@ namespace MyVet.Web.Controllers
             {
                 return NotFound();
             }
-
             var cliente = await _context.Clientes.FindAsync(id);
             if (cliente == null)
             {
@@ -92,7 +98,6 @@ namespace MyVet.Web.Controllers
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
                 try
@@ -123,7 +128,6 @@ namespace MyVet.Web.Controllers
             {
                 return NotFound();
             }
-
             var cliente = await _context.Clientes
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (cliente == null)
@@ -149,5 +153,6 @@ namespace MyVet.Web.Controllers
         {
             return _context.Clientes.Any(e => e.Id == id);
         }
+        #endregion
     }
 }
