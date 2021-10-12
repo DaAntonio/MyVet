@@ -20,6 +20,7 @@ namespace MyVet.Web.Helpers
             _combosHelper = combosHelper;
 
         }
+
         #endregion
 
         #region Metodos	
@@ -63,6 +64,37 @@ namespace MyVet.Web.Helpers
                 TipoMascotas = _combosHelper.GetComboTipoMascota() 
             };
         }
+
+        public async Task<HistorialMedico> OjHistorialMedicoAsync(HistoriaViewModel model, bool nuevaHistoria)
+        {
+            return new HistorialMedico
+            {
+                Fecha = model.Fecha.ToUniversalTime(),
+                Descripcion = model.Descripcion,
+                Id = nuevaHistoria ? 0 : model.Id,
+                Mascota = await _dataContext.Mascotas.FindAsync(model.MascotaId),
+                Comentarios = model.Comentarios,
+                TipoServicio = await _dataContext.TipoServicios.FindAsync(model.TipoServicioId)
+            };
+
+        }
+
+        public HistoriaViewModel OjHistoriaViewModel(HistorialMedico historialMedico)
+        {
+
+            return new HistoriaViewModel
+            {
+                Fecha = historialMedico.Fecha,
+                Descripcion = historialMedico.Descripcion,
+                Id = historialMedico.Id,
+                MascotaId = historialMedico.Mascota.Id,
+                Comentarios = historialMedico.Comentarios,
+                TipoServicioId = historialMedico.TipoServicio.Id,
+                TipoServicios = _combosHelper.GetComboTipoServicio()
+            };
+
+        }
+
         #endregion
 
 

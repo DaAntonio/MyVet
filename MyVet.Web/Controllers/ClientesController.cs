@@ -237,14 +237,14 @@ namespace MyVet.Web.Controllers
             return View(modeloMascota);
 
         }
-       
+
         public async Task<IActionResult> EditMascota(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var mascota = await _context.Mascotas.
+            Mascota mascota = await _context.Mascotas.
                 Include(m => m.Cliente)
                 .Include(m => m.TipoMascota)
                 .FirstOrDefaultAsync(p => p.Id == id);
@@ -260,14 +260,14 @@ namespace MyVet.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var path = modeloMascota.UrlImagen;
+                string path = modeloMascota.UrlImagen;
 
                 if (modeloMascota.ImagenFile != null)
                 {
                     path = await _imagenHelper.UploadImageAsync(modeloMascota.ImagenFile);
                 }
 
-                var mascota = await _converterHelper.OjMascotaAsync(modeloMascota, path, false);
+                Mascota mascota = await _converterHelper.OjMascotaAsync(modeloMascota, path, false);
                 _context.Mascotas.Update(mascota);
                 await _context.SaveChangesAsync();
                 return RedirectToAction($"Details/{modeloMascota.ClienteId}");
@@ -283,7 +283,7 @@ namespace MyVet.Web.Controllers
             {
                 return NotFound();
             }
-            var mascota = await _context.Mascotas
+            Mascota mascota = await _context.Mascotas
                 .Include(m => m.Cliente)
                 .ThenInclude(u => u.Usuario)
                 .Include(m => m.HistorialMedicos)
@@ -295,8 +295,101 @@ namespace MyVet.Web.Controllers
             }
             return View(mascota);
         }
-        
-            
-       #endregion
+
+        #endregion
+
+        #region Metodos para Historias
+        public async Task<IActionResult> AgregarHistoria(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Mascota pet = await _context.Mascotas.FindAsync(id.Value);
+            if (pet == null)
+            {
+                return NotFound();
+            }
+
+            HistoriaViewModel model = new HistoriaViewModel
+            {
+                Fecha = DateTime.Now,
+                MascotaId = pet.Id,
+                TipoServicios = _combosHelper.GetComboTipoServicio(),
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AgregarHistoria(HistoriaViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                HistorialMedico history = await _converterHelper.OjHistorialMedicoAsync(model, true);
+                _context.HistorialMedicos.Add(history);
+                await _context.SaveChangesAsync();
+                return RedirectToAction($"{nameof(DetailsMascota)}/{model.MascotaId}");
+            }
+            model.TipoServicios = _combosHelper.GetComboTipoServicio();
+            return View(model);
+        }
+
+
+        public async Task<IActionResult> EditarHistoria(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var history = await _context.HistorialMedicos
+                .Include(h => h.Mascota)
+                .Include(h => h.TipoServicio)
+                .FirstOrDefaultAsync(p => p.Id == id.Value);
+            if (history == null)
+            {
+                return NotFound();
+            }
+            return View(_converterHelper.OjHistoriaViewModel(history));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditarHistoria(HistoriaViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var history = await _converterHelper.OjHistorialMedicoAsync(model, false);
+                _context.HistorialMedicos.Update(history);
+                await _context.SaveChangesAsync();
+                return RedirectToAction($"{nameof(DetailsMascota)}/{model.MascotaId}");
+            }
+            model.TipoServicios = _combosHelper.GetComboTipoServicio();
+            return View(model);
+        }
+
+        public async Task<IActionResult> EliminarHistoria(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var historia = await _context.HistorialMedicos
+                .Include(h => h.Mascota)
+                .FirstOrDefaultAsync(h => h.Id == id.Value);
+            if (historia == null)
+            {
+                return NotFound();
+            }
+
+            _context.HistorialMedicos.Remove(historia);
+            await _context.SaveChangesAsync();
+            return RedirectToAction($"{nameof(DetailsMascota)}/{historia.Mascota.Id}");
+        }
+
+
+        #endregion
     }
 }

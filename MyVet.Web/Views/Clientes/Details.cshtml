@@ -38,13 +38,13 @@
             @Html.DisplayFor(model => model.Usuario.Email)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Usuario.PhoneNumber)
+            No.Teléfono
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Usuario.PhoneNumber)
         </dd>
         <dt>
-           # Mascotas
+            # Mascotas
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Mascotas.Count)
@@ -53,77 +53,80 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a> |
-    <a asp-action="AddMascota" asp-route-id="@Model.Id" class="btn btn-primary">Agregar Mascota</a>
+    <a asp-action="AddMascota" asp-route-id="@Model.Id" class="btn btn-primary">Agregar Mascota</a> |
     <a asp-action="Index" class="btn btn-success">Regresar</a>
 </div>
-@if(Model.Mascotas.Count == 0)
+<h2>Mascotas</h2>
+<hr />
+@if (Model.Mascotas.Count == 0)
 {
     <h4>No hay mascotas.</h4>
 }
-else { 
+else
+{
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().UrlImagen)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Rasa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().TipoMascota.Valor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().FechaNacimiento)
-            </th>
-            <th>
-                # Vicitas
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Comentarios)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Mascotas)
-        {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @if (!string.IsNullOrEmpty(item.UrlImagen))
-                    {
-                    <img src="@Url.Content(item.UrlImagen)" alt="=Image" style="width:200px;height:200px;max-width:100%;height:auto;"/>
-                    }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rasa)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TipoMascota.Valor)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaNacimiento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HistorialMedicos.Count)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comentarios)
-            </td>
-            <td>
-                <a asp-action="EditMascota" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
-                <a asp-action="DetailsMascota" asp-route-id="@item.Id" class="btn btn-info">Detalle</a> |
-                <a asp-action="DeleteMascota" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().UrlImagen)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Rasa)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().TipoMascota.Valor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().FechaNacimiento)
+                </th>
+                <th>
+                    # Vicitas
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Comentarios)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Mascotas)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.UrlImagen))
+                        {
+                            <img src="@Url.Content(item.UrlImagen)" alt="=Image" style="width:200px;height:200px;max-width:100%;height:auto;" />
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rasa)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TipoMascota.Valor)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaNacimiento)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.HistorialMedicos.Count)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Comentarios)
+                    </td>
+                    <td>
+                        <a asp-action="EditMascota" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
+                        <a asp-action="DetailsMascota" asp-route-id="@item.Id" class="btn btn-info">Detalle</a> |
+                        <a asp-action="DeleteMascota" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }

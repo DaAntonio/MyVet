@@ -9,5 +9,10 @@ namespace MyVet.Web.Helpers
         Task<Mascota> OjMascotaAsync(MascotaViewModel modelo, string path, bool nuevaMascota);
 
         MascotaViewModel OjMascotaViewModel(Mascota mascota);
+
+        Task<HistorialMedico> OjHistorialMedicoAsync(HistoriaViewModel model, bool nuevaHistoria);
+
+        HistoriaViewModel OjHistoriaViewModel(HistorialMedico historialMedico);
+
     }
 }

@@ -12,6 +12,7 @@ namespace MyVet.Web.Data.Entidades
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         public string Nombre { get; set; }
 
+        [Display(Name = "Foto")]
         public string UrlImagen { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]

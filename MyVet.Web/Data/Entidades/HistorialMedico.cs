@@ -20,6 +20,7 @@ namespace MyVet.Web.Data.Entidades
         public string Comentarios { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        [Display (Name ="Fecha")]
         public DateTime FechaLocal => Fecha.ToLocalTime();
 
         public TipoServicio TipoServicio { get; set; }

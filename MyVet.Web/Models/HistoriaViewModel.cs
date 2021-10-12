@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using MyVet.Web.Data.Entidades;
 
 namespace MyVet.Web.Models
 {
-    public class HistoriaViewModel
+    public class HistoriaViewModel:HistorialMedico
     {
         public int MascotaId { get; set; }
 
