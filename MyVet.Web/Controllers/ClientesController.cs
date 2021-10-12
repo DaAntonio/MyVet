@@ -195,6 +195,7 @@ namespace MyVet.Web.Controllers
         #endregion
 
         #region Metodos para Mascota
+
         public async Task<IActionResult> AddMascota(int? id)
         {
             if (id == null)
@@ -276,6 +277,26 @@ namespace MyVet.Web.Controllers
 
         }
 
-        #endregion
+        public async Task<IActionResult> DetailsMascota(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var mascota = await _context.Mascotas
+                .Include(m => m.Cliente)
+                .ThenInclude(u => u.Usuario)
+                .Include(m => m.HistorialMedicos)
+                .ThenInclude(s => s.TipoServicio)
+                .FirstOrDefaultAsync(o => o.Id == id.Value);
+            if (mascota == null)
+            {
+                return NotFound();
+            }
+            return View(mascota);
+        }
+        
+            
+       #endregion
     }
 }

@@ -1,0 +1,107 @@
+﻿@model MyVet.Web.Data.Entidades.Mascota
+@{
+    ViewData["Title"] = "DetailsMascota";
+}
+
+<h2>Detalle Mascota</h2>
+<div>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <dl class="dl-horizontal">
+                <dt>
+                    Cliente
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Cliente.Usuario.NombreCompleto)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Nombre)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Rasa)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Rasa)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.FechaNacimiento)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FechaNacimiento)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Comentarios)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Comentarios)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-md-4">
+            @if (!string.IsNullOrEmpty(Model.UrlImagen))
+            {
+                <img src="@Url.Content(Model.UrlImagen)" alt="Image" style="width:300px;height:300px;max-height: 100%; width: auto;" />
+            }
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="EditMascota" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="AgregarHistoria" asp-route-id="@Model.Id" class="btn btn-primary">Agregar Historia</a>
+    <a asp-action="Details" asp-route-id="@Model.Cliente.Id" class="btn btn-success">Regresar</a>
+</div>
+<h4>Historial</h4>
+<hr />
+@if (Model.HistorialMedicos.Count == 0)
+{
+<h5>No hay registros.</h5>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.HistorialMedicos.FirstOrDefault().FechaLocal)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HistorialMedicos.FirstOrDefault().TipoServicio.Valor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HistorialMedicos.FirstOrDefault().Descripcion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HistorialMedicos.FirstOrDefault().Comentarios)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.HistorialMedicos)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Fecha)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TipoServicio.Valor)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descripcion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Comentarios)
+                    </td>
+                    <td>
+                        <a asp-action="EditarHistoria" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
+                        <a asp-action="EliminarHistoria" asp-route-id="@item.Id" class="btn btn-danger">Eliminat</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
