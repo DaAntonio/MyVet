@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MyVet.Web.Data.Entidades
 {
@@ -20,9 +18,8 @@ namespace MyVet.Web.Data.Entidades
         public string Rasa { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
-        [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
-        [Display (Name = "Fecha de Nacimiento")]
+        [Display(Name = "Fecha de Nacimiento")]
         public DateTime FechaNacimiento { get; set; }
 
         public string Comentarios { get; set; }
@@ -31,7 +28,7 @@ namespace MyVet.Web.Data.Entidades
             ? null
             : $"https://TBD.azurewebsites.net{UrlImagen.Substring(1)}";
 
-       
+
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         [Display(Name = "Fecha de Nacimiento")]
         public DateTime FechaLocal => FechaNacimiento.ToLocalTime();

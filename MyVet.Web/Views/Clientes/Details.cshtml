@@ -3,11 +3,8 @@
 @{
     ViewData["Title"] = "Details";
 }
-
-<h2>Cliente</h2>
-
 <div>
-    <h4>Detalle</h4>
+    <h2>Detalle Cliente </h2>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -17,28 +14,28 @@
             @Html.DisplayFor(model => model.Usuario.Nombre)
         </dd>
         <dt>
+            @Html.DisplayNameFor(model => model.Usuario.Apellidos)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Usuario.Apellidos)
+        </dd>
+        <dt>
             @Html.DisplayNameFor(model => model.Usuario.Documento)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Usuario.Documento)
         </dd>
         <dt>
+            @Html.DisplayNameFor(model => model.Usuario.Direccion)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Usuario.Direccion)
+        </dd>
+        <dt>
             @Html.DisplayNameFor(model => model.Usuario.Email)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Usuario.Email)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Usuario.Direccion)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Usuario.Direccion)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Usuario.Direccion)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Usuario.Direccion)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Usuario.PhoneNumber)
@@ -55,13 +52,13 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a> |
-    <a asp-action="AddMascota" asp-route-id="@Model.Id" class="btn btn-primary">Add Mascota</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a> |
+    <a asp-action="AddMascota" asp-route-id="@Model.Id" class="btn btn-primary">Agregar Mascota</a>
     <a asp-action="Index" class="btn btn-success">Regresar</a>
 </div>
-@if (Model.Mascotas.Count == 0)
+@if(Model.Mascotas.Count == 0)
 {
-    <h4>No hay mascotas</h4>
+    <h4>No hay mascotas.</h4>
 }
 else { 
 
@@ -70,6 +67,9 @@ else {
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().UrlImagen)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Mascotas.FirstOrDefault().Rasa)
@@ -97,6 +97,12 @@ else {
                 @Html.DisplayFor(modelItem => item.Nombre)
             </td>
             <td>
+                @if (!string.IsNullOrEmpty(item.UrlImagen))
+                    {
+                    <img src="@Url.Content(item.UrlImagen)" alt="=Image" style="width:200px;height:200px;max-width:100%;height:auto;"/>
+                    }
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Rasa)
             </td>
             <td>
@@ -112,9 +118,9 @@ else {
                 @Html.DisplayFor(modelItem => item.Comentarios)
             </td>
             <td>
-                <a asp-action="EditMascota" asp-route-id="@item.Id"class="btn btn-warning">Edit</a> |
-                <a asp-action="DetailsMascota" asp-route-id="@item.Id"class="btn btn-info">Details</a> |
-                <a asp-action="DeleteMascota" asp-route-id="@item.Id"class="btn btn-danger">Delete</a>
+                <a asp-action="EditMascota" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
+                <a asp-action="DetailsMascota" asp-route-id="@item.Id" class="btn btn-info">Detalle</a> |
+                <a asp-action="DeleteMascota" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
             </td>
         </tr>
         }

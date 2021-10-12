@@ -59,6 +59,9 @@ namespace MyVet.Web
             //AddScoped inyeccion en memoria 
             services.AddTransient<AlimentadorDB>();
             services.AddScoped<IUsuarioHelper, UserHelper>();
+            services.AddScoped<ICombosHelper, CombosHelper>();
+            services.AddScoped<IConverterHelper, ConverterHelper>();
+            services.AddScoped<IImagenHelper, ImagenHelper>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
