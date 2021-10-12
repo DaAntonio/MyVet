@@ -6,6 +6,8 @@ namespace MyVet.Web.Helpers
 {
     public interface IConverterHelper
     {
-        Task<Mascota> OMascotaAsync(MascotaViewModel modelo, string path, bool isNew);
+        Task<Mascota> OjMascotaAsync(MascotaViewModel modelo, string path, bool nuevaMascota);
+
+        MascotaViewModel OjMascotaViewModel(Mascota mascota);
     }
 }

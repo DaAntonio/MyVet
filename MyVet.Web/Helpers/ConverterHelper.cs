@@ -10,26 +10,27 @@ namespace MyVet.Web.Helpers
     {
         #region Variables
         private readonly DataContext _dataContext;
+        private readonly ICombosHelper _combosHelper;
         #endregion
 
         #region Constructor	
-        public ConverterHelper(DataContext dataContext)
+        public ConverterHelper(DataContext dataContext, ICombosHelper combosHelper)
         {
             _dataContext = dataContext;
+            _combosHelper = combosHelper;
 
         }
         #endregion
 
         #region Metodos	
-        public async Task<Mascota> OMascotaAsync(MascotaViewModel modelo, string path, bool isNew)
+        public async Task<Mascota> OjMascotaAsync(MascotaViewModel modelo, string path, bool nuevaMascota)
         {
-
             var mascota = new Mascota
             {
                 Agendas = modelo.Agendas,
                 FechaNacimiento = modelo.FechaNacimiento,
                 HistorialMedicos = modelo.HistorialMedicos,
-                Id = isNew ? 0 : modelo.Id,
+                Id = nuevaMascota ? 0 : modelo.Id,
                 UrlImagen = path,
                 Nombre = modelo.Nombre,
                 Cliente = await _dataContext.Clientes.FindAsync(modelo.ClienteId),
@@ -41,10 +42,27 @@ namespace MyVet.Web.Helpers
             {
                 mascota.Id = modelo.Id;
             }
-
             return mascota;
         }
 
+        public MascotaViewModel OjMascotaViewModel(Mascota mascota)
+        {
+            return new MascotaViewModel{
+                Agendas = mascota.Agendas,
+                FechaNacimiento = mascota.FechaNacimiento,
+                HistorialMedicos = mascota.HistorialMedicos,
+                UrlImagen = mascota.UrlImagen,
+                Nombre = mascota.Nombre,
+                Cliente = mascota.Cliente,
+                TipoMascota =mascota.TipoMascota,
+                Rasa =mascota.Rasa,
+                Comentarios = mascota.Comentarios,
+                Id = mascota.Id,
+                ClienteId = mascota.Cliente.Id,
+                TipoMascotaId =mascota.TipoMascota.Id,
+                TipoMascotas = _combosHelper.GetComboTipoMascota() 
+            };
+        }
         #endregion
 
 

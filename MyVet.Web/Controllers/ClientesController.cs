@@ -39,7 +39,7 @@ namespace MyVet.Web.Controllers
         }
         #endregion
 
-        #region Metodos
+        #region Metodos para Cliente
         public IActionResult Index()
         {
             return View(_context.Clientes
@@ -192,6 +192,9 @@ namespace MyVet.Web.Controllers
             return _context.Clientes.Any(e => e.Id == id);
         }
 
+        #endregion
+
+        #region Metodos para Mascota
         public async Task<IActionResult> AddMascota(int? id)
         {
             if (id == null)
@@ -213,26 +216,66 @@ namespace MyVet.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddMascota(MascotaViewModel mascota)
+        public async Task<IActionResult> AddMascota(MascotaViewModel modeloMascota)
         {
             if (ModelState.IsValid)
             {
                 string path = string.Empty;
 
-                if (mascota.ImagenFile != null)
+                if (modeloMascota.ImagenFile != null)
                 {
-                    path = await _imagenHelper.UploadImageAsync(mascota.ImagenFile);
+                    path = await _imagenHelper.UploadImageAsync(modeloMascota.ImagenFile);
                 }
 
-                Mascota pet = await _converterHelper.OMascotaAsync(mascota, path, true);
-                _context.Mascotas.Add(pet);
+                Mascota mascota = await _converterHelper.OjMascotaAsync(modeloMascota, path, true);
+                _context.Mascotas.Add(mascota);
                 await _context.SaveChangesAsync();
-                return RedirectToAction($"Details/{mascota.ClienteId}");
+                return RedirectToAction($"Details/{modeloMascota.ClienteId}");
             }
-
-            return View(mascota);
+            modeloMascota.TipoMascotas = _combosHelper.GetComboTipoMascota();
+            return View(modeloMascota);
 
         }
+       
+        public async Task<IActionResult> EditMascota(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var mascota = await _context.Mascotas.
+                Include(m => m.Cliente)
+                .Include(m => m.TipoMascota)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (mascota == null)
+            {
+                return NotFound();
+            }
+            return View(_converterHelper.OjMascotaViewModel(mascota));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditMascota(MascotaViewModel modeloMascota)
+        {
+            if (ModelState.IsValid)
+            {
+                var path = modeloMascota.UrlImagen;
+
+                if (modeloMascota.ImagenFile != null)
+                {
+                    path = await _imagenHelper.UploadImageAsync(modeloMascota.ImagenFile);
+                }
+
+                var mascota = await _converterHelper.OjMascotaAsync(modeloMascota, path, false);
+                _context.Mascotas.Update(mascota);
+                await _context.SaveChangesAsync();
+                return RedirectToAction($"Details/{modeloMascota.ClienteId}");
+            }
+            modeloMascota.TipoMascotas = _combosHelper.GetComboTipoMascota();
+            return View(modeloMascota);
+
+        }
+
         #endregion
     }
 }
