@@ -202,18 +202,22 @@ namespace MyVet.Web.Controllers
             {
                 return NotFound();
             }
-            Cliente cliente = await _context.Clientes.FindAsync(id.Value);
-            if (cliente == null)
+
+            var owner = await _context.Clientes.FindAsync(id.Value);
+            if (owner == null)
             {
                 return NotFound();
             }
-            MascotaViewModel modelo = new MascotaViewModel
+
+            var model = new MascotaViewModel
             {
                 FechaNacimiento = DateTime.Today,
-                ClienteId = cliente.Id,
+                ClienteId = owner.Id,
                 TipoMascotas = _combosHelper.GetComboTipoMascota()
             };
-            return View(modelo);
+
+            return View(model);
+
         }
 
         [HttpPost]
@@ -221,20 +225,21 @@ namespace MyVet.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                string path = string.Empty;
+                var path = string.Empty;
 
                 if (modeloMascota.ImagenFile != null)
                 {
                     path = await _imagenHelper.UploadImageAsync(modeloMascota.ImagenFile);
                 }
 
-                Mascota mascota = await _converterHelper.OjMascotaAsync(modeloMascota, path, true);
-                _context.Mascotas.Add(mascota);
+                var pet = await _converterHelper.OjMascotaAsync(modeloMascota, path, true);
+                _context.Mascotas.Add(pet);
                 await _context.SaveChangesAsync();
                 return RedirectToAction($"Details/{modeloMascota.ClienteId}");
             }
-            modeloMascota.TipoMascotas = _combosHelper.GetComboTipoMascota();
+
             return View(modeloMascota);
+
 
         }
 

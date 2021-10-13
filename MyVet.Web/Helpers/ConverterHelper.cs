@@ -39,10 +39,7 @@ namespace MyVet.Web.Helpers
                 Rasa = modelo.Rasa,
                 Comentarios = modelo.Comentarios
             };
-            if (modelo.Id != 0)
-            {
-                mascota.Id = modelo.Id;
-            }
+            
             return mascota;
         }
 
