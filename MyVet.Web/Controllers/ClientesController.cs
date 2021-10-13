@@ -161,31 +161,33 @@ namespace MyVet.Web.Controllers
             return View(cliente);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Eliminar(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            Cliente cliente = await _context.Clientes
+
+            var cliente = await _context.Clientes
+                .Include(c => c.Mascotas)
+                .Include(c => c.Usuario)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (cliente == null)
             {
                 return NotFound();
             }
+            if (cliente.Mascotas.Count >0)
+            {
 
-            return View(cliente);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            Cliente cliente = await _context.Clientes.FindAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            await _usuarioHelper.ElimianarUsuarioAsync(cliente.Usuario.Email);
             _context.Clientes.Remove(cliente);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+       
 
         private bool ClienteExists(int id)
         {
@@ -301,6 +303,31 @@ namespace MyVet.Web.Controllers
             return View(mascota);
         }
 
+        public async Task<IActionResult> EliminarMascota(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var mascota = await _context.Mascotas
+                .Include(c => c.Cliente)
+                .Include(c => c.HistorialMedicos)
+                .FirstOrDefaultAsync(c => c.Id == id.Value);
+            if (mascota == null)
+            {
+                return NotFound();
+            }
+            if (mascota.HistorialMedicos.Count > 0)
+            {
+                ModelState.AddModelError(string.Empty, "No se puede borrar el registro, existen datos de esta mascota.");
+                return RedirectToAction($"{nameof(Details)}/{mascota.Cliente.Id}");
+            }
+
+            _context.Mascotas.Remove(mascota);
+            await _context.SaveChangesAsync();
+            return RedirectToAction($"{nameof(Details)}/{mascota.Cliente.Id}");
+        }
         #endregion
 
         #region Metodos para Historias

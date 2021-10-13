@@ -76,6 +76,18 @@ namespace MyVet.Web.Helpers
             await _signInManager.SignOutAsync();
         }
 
+        public  async Task<bool> ElimianarUsuarioAsync(string email)
+        {
+            var usuario = await GetUsuarioByEmailAsync(email);
+            if (usuario == null)
+            {
+                return true;
+            }
+            var eliminar = await _userManager.DeleteAsync(usuario);
+            return eliminar.Succeeded;
+
+        }
+
         #endregion
     }
 }

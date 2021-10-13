@@ -5,9 +5,6 @@ using MyVet.Web.Models;
 using System.Linq;
 using System.Threading.Tasks;
 #endregion
-
-
-
 namespace MyVet.Web.Controllers
 {
     #region Permisos
@@ -23,7 +20,6 @@ namespace MyVet.Web.Controllers
         public CuentaController(IUsuarioHelper usuarioHelper)
         {
             _usuarioHelper = usuarioHelper;
-
         }
 
         #endregion
@@ -48,7 +44,7 @@ namespace MyVet.Web.Controllers
                     }
                     return RedirectToAction("Index", "Home");
                 }
-                ModelState.AddModelError(string.Empty, "Usuario o contaseña invalidas");
+                ModelState.AddModelError(string.Empty, "Usuario o contaseña invalidos");
             }
             return View(loginViewModel);
         }
@@ -57,7 +53,6 @@ namespace MyVet.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await _usuarioHelper.LogoutAsync();
-
             return RedirectToAction("Index", "Home");
         }
 

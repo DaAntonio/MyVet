@@ -17,6 +17,7 @@ namespace MyVet.Web.Helpers
         Task<bool> IsUsuarioInRolAsync(Usuario usuario, string rolNombre);
         Task<SignInResult> LoginAsync(LoginViewModel loginViewModel);
         Task LogoutAsync();
+        Task<bool> ElimianarUsuarioAsync(string email);
 
         #endregion
 

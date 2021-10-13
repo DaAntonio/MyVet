@@ -50,11 +50,11 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li><a asp-area=""asp-controller="Cuenta" asp-action="ChangeUser">@User.Identity.Name</a></li>
-                        <li><a asp-area=""asp-controller="Cuenta" asp-action="Logout">Logout</a></li>
+                        <li><a asp-area="" asp-controller="Cuenta" asp-action="Logout">Cerrar sesión</a></li>
 
                       }else
                        {
-                        <li><a asp-area=""asp-controller="Cuenta" asp-action="Login">Login</a></li>
+                        <li><a asp-area="" asp-controller="Cuenta" asp-action="Login">Iniciar sesión</a></li>
                        }
                 </ul>
             </div>

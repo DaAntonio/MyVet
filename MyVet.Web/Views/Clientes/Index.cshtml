@@ -19,7 +19,7 @@
                 @Html.DisplayNameFor(model => model.Usuario.Documento)
             </th>
             <th>
-               No.Teléfono
+                No.Teléfono
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Usuario.Email)
@@ -35,33 +35,54 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Usuario.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Usuario.Documento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Usuario.PhoneNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Usuario.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Usuario.Direccion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mascotas.Count)
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Usuario.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Usuario.Documento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Usuario.PhoneNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Usuario.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Usuario.Direccion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mascotas.Count)
 
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalle</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
-            </td>
-        </tr>
-}
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalle</a> |
+                    <button data-id="@item.Id" class="btn btn-danger eliminarRegistro" data-toggle="modal" data-target="#eliminarDialog">Eliminar</button>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<partial name="_ModalEliminar" />
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+    	$(document).ready(function () {
+        	// Delete item
+        	var item_a_eliminar;
+
+            $('.eliminarRegistro').click((e) => {
+                item_a_eliminar = e.currentTarget.dataset.id;
+        	});
+
+        	$("#btnEliminarSi").click(function () {
+                window.location.href = '/Clientes/Eliminar/' + item_a_eliminar;
+        	});
+    	});
+    </script>
+}
