@@ -88,6 +88,12 @@ namespace MyVet.Web.Helpers
 
         }
 
+        public async Task<IdentityResult> EditarUsuarioAsync(Usuario usuario)
+        {
+            return await _userManager.UpdateAsync(usuario);   
+        }
+
+
         #endregion
     }
 }

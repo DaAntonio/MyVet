@@ -122,43 +122,49 @@ namespace MyVet.Web.Controllers
             {
                 return NotFound();
             }
-            Cliente cliente = await _context.Clientes.FindAsync(id);
-            if (cliente == null)
+
+            var owner = await _context.Clientes
+                .Include(o => o.Usuario)
+                .FirstOrDefaultAsync(o => o.Id == id.Value);
+            if (owner == null)
             {
                 return NotFound();
             }
-            return View(cliente);
+
+            var modelo = new EditUsuarioViewModel
+            {
+                Direccion = owner.Usuario.Direccion,
+                Documento = owner.Usuario.Documento,
+                Nombre = owner.Usuario.Nombre,
+                Id = owner.Id,
+                Apellido = owner.Usuario.Apellidos,
+                NTelefono = owner.Usuario.PhoneNumber
+            };
+
+            return View(modelo);
+
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id")] Cliente cliente)
+        public async Task<IActionResult> Edit(EditUsuarioViewModel modelo)
         {
-            if (id != cliente.Id)
-            {
-                return NotFound();
-            }
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(cliente);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ClienteExists(cliente.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                var cliente = await _context.Clientes
+                    .Include(o => o.Usuario)
+                    .FirstOrDefaultAsync(o => o.Id == modelo.Id);
+
+                cliente.Usuario.Documento = modelo.Documento;
+                cliente.Usuario.Nombre = modelo.Nombre;
+                cliente.Usuario.Apellidos = modelo.Apellido;
+                cliente.Usuario.Direccion = modelo.Direccion;
+                cliente.Usuario.PhoneNumber = modelo.NTelefono;
+
+                await _usuarioHelper.EditarUsuarioAsync(cliente.Usuario);
                 return RedirectToAction(nameof(Index));
             }
-            return View(cliente);
+            return View(modelo);
         }
 
         public async Task<IActionResult> Eliminar(int? id)

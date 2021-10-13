@@ -18,6 +18,7 @@ namespace MyVet.Web.Helpers
         Task<SignInResult> LoginAsync(LoginViewModel loginViewModel);
         Task LogoutAsync();
         Task<bool> ElimianarUsuarioAsync(string email);
+        Task<IdentityResult> EditarUsuarioAsync(Usuario usuario);
 
         #endregion
 
