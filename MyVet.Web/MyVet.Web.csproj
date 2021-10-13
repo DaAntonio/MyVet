@@ -25,4 +25,8 @@
     <Folder Include="wwwroot\images\Mascotas\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MyVet.Common\MyVet.Common.csproj" />
+  </ItemGroup>
+
 </Project>
