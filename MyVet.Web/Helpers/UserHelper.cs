@@ -93,6 +93,13 @@ namespace MyVet.Web.Helpers
             return await _userManager.UpdateAsync(usuario);   
         }
 
+        public async Task<SignInResult> ValidaPasswordAsync(Usuario usuario, string password)
+        {
+            return await _signInManager.CheckPasswordSignInAsync(
+                usuario,
+                password,
+                false);
+        }
 
         #endregion
     }

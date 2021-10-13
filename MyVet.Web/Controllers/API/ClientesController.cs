@@ -5,12 +5,15 @@ using System.Threading.Tasks;
 using MyVet.Common.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 #endregion
 
 namespace MyVet.Web.Controllers.API
 {
     [Route("api/[Controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ClientesController : ControllerBase
     {
         #region Variables
